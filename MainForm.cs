@@ -8,7 +8,11 @@ namespace WinChrono
     {
 
         private Label labelTime;
+        private Button btnStartPause;
+        private Button btnReset;
         private int elapsedMs = 0;
+        private bool isRunning = false;
+        private DateTime? startUtc = null;
         public MainForm()
         {
             Text = "Chronomètre";
@@ -24,11 +28,73 @@ namespace WinChrono
             };
             Controls.Add(labelTime);
 
+            btnStartPause = new Button
+            {
+                Text = "Démarrer",
+                Width = 120,
+                Height = 40,
+                Left = 50,
+                Top = 120,
+                TabIndex = 0
+            };
+            btnStartPause.Click += BtnStartPause_Click;
+            Controls.Add(btnStartPause);
+
+            btnReset = new Button
+            {
+                Text = "Remise à zéro",
+                Width = 120,
+                Height = 40,
+                Left = 230,
+                Top = 120,
+                TabIndex = 1
+            };
+            btnReset.Click += BtnReset_Click;
+            Controls.Add(btnReset);
+
+            AcceptButton = btnStartPause;
+            CancelButton = btnReset;  
+
+
+            UpdateView();
+        }
+
+        private void BtnStartPause_Click(object? sender, EventArgs e)
+        {
+            if (!isRunning)
+            {
+                startUtc = DateTime.UtcNow;
+                isRunning = true;
+                btnStartPause.Text = "Pause";
+            }
+            else
+            {
+                if (startUtc.HasValue)
+                {
+                    elapsedMs += (int)(DateTime.UtcNow - startUtc.Value).TotalMilliseconds;
+                }
+                startUtc = null;
+                isRunning = false;
+                btnStartPause.Text = "Démarrer";
+                UpdateView();
+            }
+        }
+
+        private void BtnReset_Click(object? sender, EventArgs e)
+        {
+            isRunning = false;
+            startUtc = null;
+            elapsedMs = 0;
+            btnStartPause.Text = "Démarrer";
             UpdateView();
         }
 
         private void UpdateView()
         {
+            int dispayMs = elapsedMs;
+            if (isRunning && startUtc.HasValue)
+                dispayMs = elapsedMs + (int)(DateTime.UtcNow - startUtc.Value).TotalMilliseconds;
+            
             var ts = TimeSpan.FromMilliseconds(elapsedMs);
             labelTime.Text = $"{ts.Minutes:00}:{ts.Seconds:00}.{ts.Milliseconds / 10:00}";
         }
