@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WinChrono")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c4a6143937becaaebd1ae0e5d25a15b6086fc3d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3290539dfb338d4536d12f4dcd4ba6329e6a20f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinChrono")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinChrono")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
