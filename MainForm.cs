@@ -2,11 +2,12 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
+
 namespace WinChrono
 {
     public class MainForm : Form
     {
-
+        private System.Windows.Forms.Timer uiTimer;
         private Label labelTime;
         private Button btnStartPause;
         private Button btnReset;
@@ -53,7 +54,10 @@ namespace WinChrono
             Controls.Add(btnReset);
 
             AcceptButton = btnStartPause;
-            CancelButton = btnReset;  
+            CancelButton = btnReset;
+
+            uiTimer = new System.Windows.Forms.Timer { Interval = 50 };
+            uiTimer.Tick += UiTimer_Tick;
 
 
             UpdateView();
@@ -66,6 +70,7 @@ namespace WinChrono
                 startUtc = DateTime.UtcNow;
                 isRunning = true;
                 btnStartPause.Text = "Pause";
+                uiTimer.Start();
             }
             else
             {
@@ -76,6 +81,7 @@ namespace WinChrono
                 startUtc = null;
                 isRunning = false;
                 btnStartPause.Text = "Démarrer";
+                uiTimer.Stop();
                 UpdateView();
             }
         }
@@ -86,17 +92,24 @@ namespace WinChrono
             startUtc = null;
             elapsedMs = 0;
             btnStartPause.Text = "Démarrer";
+            uiTimer.Stop();
             UpdateView();
         }
 
         private void UpdateView()
         {
-            int dispayMs = elapsedMs;
+            int displayMs = elapsedMs;
             if (isRunning && startUtc.HasValue)
-                dispayMs = elapsedMs + (int)(DateTime.UtcNow - startUtc.Value).TotalMilliseconds;
-            
-            var ts = TimeSpan.FromMilliseconds(elapsedMs);
+                displayMs = elapsedMs + (int)(DateTime.UtcNow - startUtc.Value).TotalMilliseconds;
+
+            var ts = TimeSpan.FromMilliseconds(displayMs);
             labelTime.Text = $"{ts.Minutes:00}:{ts.Seconds:00}.{ts.Milliseconds / 10:00}";
+        }
+
+        private void UiTimer_Tick(object? sender, EventArgs e)
+        {
+            if (isRunning)
+                UpdateView();
         }
     }
 }
