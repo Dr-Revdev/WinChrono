@@ -59,6 +59,8 @@ namespace WinChrono
             uiTimer = new System.Windows.Forms.Timer { Interval = 50 };
             uiTimer.Tick += UiTimer_Tick;
 
+            KeyPreview = true;
+            this.KeyDown += MainForm_KeyDown;
 
             UpdateView();
         }
@@ -110,6 +112,16 @@ namespace WinChrono
         {
             if (isRunning)
                 UpdateView();
+        }
+
+        private void MainForm_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+                BtnStartPause_Click(btnStartPause, EventArgs.Empty);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }
